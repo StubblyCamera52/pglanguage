@@ -44,6 +44,28 @@ bool match(Parser *parser, TokenType type) {
 
 // mess of recursion for grammar rules
 
+// start of tree
+
+ASTNode *parse_program(Parser *parser) {
+    ASTNode **statements = NULL;
+    size_t count = 0;
+
+    while (!check(parser, TOKEN_EOF)) {
+        ASTNode *stmt = parse_declaration(parser);
+
+        statements = realloc(statements, sizeof(ASTNode*)*(count+1));
+        statements[count++] = stmt;
+    }
+
+    return ast_make_block(statements, count);
+}
+
+ASTNode *parse_declaration(Parser *parser) {
+    if (match(parser, TOKEN_VAR)) {
+        return parse_var_decl(parser);
+    }
+}
+
 ASTNode *parse_primary(Parser *parser);
 ASTNode *parse_expression(Parser *parser);
 
@@ -82,28 +104,7 @@ ASTNode *parse_var_decl(Parser *parser) {
     return node;
 }
 
-// start of tree
-ASTNode *parse_declaration(Parser *parser) {
-    if (match(parser, TOKEN_VAR)) {
-        return parse_var_decl(parser);
-    }
-}
-
 ASTNode *parse_expression(Parser *parser) {
     // start parse from highest grammar level
     parse_assignment(parser);
-}
-
-ASTNode *parse_program(Parser *parser) {
-    ASTNode **statements = NULL;
-    size_t count = 0;
-
-    while (!check(parser, TOKEN_EOF)) {
-        ASTNode *stmt = parse_declaration(parser);
-
-        statements = realloc(statements, sizeof(ASTNode*)*(count+1));
-        statements[count++] = stmt;
-    }
-
-    return ast_make_block(statements, count);
 }
