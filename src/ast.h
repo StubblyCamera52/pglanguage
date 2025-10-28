@@ -3,7 +3,8 @@
 
 
 #include "token.h"
-#include <cstddef>
+#include <stddef.h>
+
 typedef enum {
     AST_PROGRAM, AST_VAR_DECL, AST_CONST_DECL, AST_BLOCK, AST_IF, AST_WHILE, AST_FOR, AST_BIN_EXPR, AST_UN_EXPR, AST_ASSIGNMENT, AST_LITERAL, AST_IDENTIFIER
 } ASTNodeType;

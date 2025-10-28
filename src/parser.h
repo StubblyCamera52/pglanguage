@@ -3,7 +3,7 @@
 
 #include "ast.h"
 #include "token.h"
-#include <cstddef>
+#include <stddef.h>
 
 typedef struct {
     Token *tokens; // list of tokens
