@@ -21,7 +21,7 @@ Token *peek(Parser *parser) {
 
 Token *previous(Parser *parser) {
     if (parser->current == 0) return NULL;
-    return &parser->tokens[parser->current-1]
+    return &parser->tokens[parser->current-1];
 }
 
 Token *advance(Parser *parser) {
@@ -45,6 +45,7 @@ bool match(Parser *parser, TokenType type) {
 // mess of recursion for grammar rules
 
 ASTNode *parse_primary(Parser *parser);
+ASTNode *parse_expression(Parser *parser);
 
 ASTNode *parse_assignment(Parser *parser) {
     ASTNode *expr = parse_primary(parser);
@@ -52,7 +53,7 @@ ASTNode *parse_assignment(Parser *parser) {
     if (match(parser, TOKEN_EQUAL)) {
         Token op = *previous(parser);
         ASTNode *right = parse_assignment(parser);
-        expr = ast_make_binary(expr, right, op)
+        expr = ast_make_binary(expr, right, op);
     }
 
     return expr;
@@ -69,8 +70,16 @@ ASTNode *parse_var_decl(Parser *parser) {
 
     ASTNode *initializer = NULL; // initializer is optional
     if (match(parser, TOKEN_EQUAL)) {
-        initializer = parse_expr
+        initializer = parse_expression(parser);
     }
+
+    ASTNode *node = alloc_node(AST_VAR_DECL);
+    node->token = name;
+
+    node->binary.left = ast_make_identifier(name);
+    node->binary.right = initializer;
+
+    return node;
 }
 
 // start of tree

@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 
-static ASTNode *alloc_node(ASTNodeType type) {
+ASTNode *alloc_node(ASTNodeType type) {
     ASTNode *node = calloc(1, sizeof(ASTNode));
     node->type = type;
     return node;

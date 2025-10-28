@@ -44,6 +44,6 @@ ASTNode *ast_make_identifier(Token name);
 ASTNode *ast_make_binary(ASTNode *left, ASTNode *right, Token op);
 ASTNode *ast_make_block(ASTNode **statements, size_t count);
 
-static ASTNode *alloc_node(ASTNodeType type);
+ASTNode *alloc_node(ASTNodeType type);
 
 #endif
