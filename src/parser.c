@@ -5,6 +5,7 @@
 #include "token.h"
 #include <stddef.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -64,10 +65,44 @@ ASTNode *parse_declaration(Parser *parser) {
     if (match(parser, TOKEN_VAR)) {
         return parse_var_decl(parser);
     }
+    return parse_statement(parser);
 }
 
-ASTNode *parse_primary(Parser *parser);
-ASTNode *parse_expression(Parser *parser);
+ASTNode *parse_var_decl(Parser *parser) {
+    Token name = *advance(parser);
+
+    ASTNode *initializer = NULL; // initializer is optional
+    if (match(parser, TOKEN_EQUAL)) {
+        initializer = parse_expression(parser);
+    }
+
+    if (!match(parser, TOKEN_SEMICOLON)) {
+        return NULL;
+        exit(1);
+    }
+
+    ASTNode *node = alloc_node(AST_VAR_DECL);
+    node->token = name;
+
+    node->binary.left = ast_make_identifier(name);
+    node->binary.right = initializer;
+
+    return node;
+}
+
+ASTNode *parse_statement(Parser *parser) {
+    return parse_expression_stmt(parser);
+}
+
+ASTNode *parse_expression_stmt(Parser *parser) {
+    ASTNode *expr = parse_expression(parser);
+
+    if (!match(parser, TOKEN_SEMICOLON)) {
+        return NULL;
+    }
+
+    return expr;
+}
 
 ASTNode *parse_assignment(Parser *parser) {
     ASTNode *expr = parse_primary(parser);
@@ -81,30 +116,19 @@ ASTNode *parse_assignment(Parser *parser) {
     return expr;
 }
 
+
 ASTNode *parse_primary(Parser *parser) {
     if (match(parser, TOKEN_IDENTIFIER)) {
         return ast_make_identifier(*previous(parser));
     }
-}
-
-ASTNode *parse_var_decl(Parser *parser) {
-    Token name = *previous(parser);
-
-    ASTNode *initializer = NULL; // initializer is optional
-    if (match(parser, TOKEN_EQUAL)) {
-        initializer = parse_expression(parser);
+    if (match(parser, TOKEN_NUMBER)) {
+        return ast_make_literal(previous(parser)->start, TOKEN_NUMBER);
     }
-
-    ASTNode *node = alloc_node(AST_VAR_DECL);
-    node->token = name;
-
-    node->binary.left = ast_make_identifier(name);
-    node->binary.right = initializer;
-
-    return node;
 }
+
+
 
 ASTNode *parse_expression(Parser *parser) {
     // start parse from highest grammar level
-    parse_assignment(parser);
+    return parse_assignment(parser);
 }

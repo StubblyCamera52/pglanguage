@@ -3,7 +3,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -std=c99 -g
 
 SRC = src
-INC = include
+INC = src
 BIN = bin
 
 TARGET = $(BIN)/mylang

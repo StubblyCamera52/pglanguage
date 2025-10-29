@@ -20,8 +20,10 @@ ASTNode *parse_var_decl(Parser *parser);
 ASTNode *parse_const_decl(Parser *parser);
 ASTNode *parse_func_decl(Parser *parser);
 ASTNode *parse_statement(Parser *parser);
-ASTNode *parse_expression(Parser *parser);
+ASTNode *parse_expression_stmt(Parser *parser);
+
 // recursive descent
+ASTNode *parse_expression(Parser *parser);
 ASTNode *parse_assigment(Parser *parser);
 ASTNode *parse_logical_or(Parser *parser);
 ASTNode *parse_logical_and(Parser *parser);

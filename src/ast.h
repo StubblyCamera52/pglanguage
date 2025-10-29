@@ -31,7 +31,8 @@ typedef struct ASTNode {
       } block;
 
       struct {
-          char *value;
+          const char *value;
+          TokenType type;
       } literal;
 
       struct {
@@ -43,6 +44,7 @@ typedef struct ASTNode {
 ASTNode *ast_make_identifier(Token name);
 ASTNode *ast_make_binary(ASTNode *left, ASTNode *right, Token op);
 ASTNode *ast_make_block(ASTNode **statements, size_t count);
+ASTNode *ast_make_literal(const char *value, TokenType type);
 
 ASTNode *alloc_node(ASTNodeType type);
 

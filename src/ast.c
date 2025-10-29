@@ -31,3 +31,10 @@ ASTNode *ast_make_block(ASTNode **statements, size_t count) {
     node->block.count = count;
     return node;
 }
+
+ASTNode *ast_make_literal(const char *value, TokenType type) {
+    ASTNode *node = alloc_node(AST_LITERAL);
+    node->literal.type = type;
+    node->literal.value = value;
+    return node;
+}
