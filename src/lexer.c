@@ -1,6 +1,8 @@
 #include "lexer.h"
 #include "token.h"
 #include <ctype.h>
+#include <stdbool.h>
+#include <stdio.h>
 #include <string.h>
 
 static int is_at_end(Lexer *lexer) {
@@ -75,8 +77,7 @@ static Token error_token(const char *message) {
 // keywords and literals
 
 static TokenType check_keyword(Lexer *lexer, int start, int length, const char *rest, TokenType type) {
-    if ((int)(lexer->current - lexer->start) == start + length &&
-        memcmp(lexer->start + start, rest, length) == 0) {
+    if (memcmp(lexer->start + start, rest, length) == 0) {
             return type;
         }
     return TOKEN_IDENTIFIER;
@@ -84,7 +85,9 @@ static TokenType check_keyword(Lexer *lexer, int start, int length, const char *
 
 static TokenType identifier_type(Lexer *lexer) {
     switch (lexer->start[0]) {
-        case 'v': return check_keyword(lexer, 1, 2, "ar", TOKEN_VAR); // "var"
+        case 'v': {
+            return check_keyword(lexer, 1, 2, "ar", TOKEN_VAR);
+        } // "var"
     }
     return TOKEN_IDENTIFIER;
 }
@@ -113,8 +116,9 @@ static Token number(Lexer *lexer) {
 }
 
 static Token identifier(Lexer *lexer) {
+    TokenType type = identifier_type(lexer);
     while (isalnum(peek(lexer)) || peek(lexer) == '_') advance(lexer);
-    return make_token(lexer, TOKEN_IDENTIFIER);
+    return make_token(lexer, type);
 }
 
 void init_lexer(Lexer *lexer, const char *source) {
