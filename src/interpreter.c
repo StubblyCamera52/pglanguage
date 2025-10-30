@@ -1,4 +1,5 @@
 #include "interpreter.h"
+#include "ast.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -31,7 +32,7 @@ int env_get(Enviroment *env, const char* name) {
     Var* var = env->head;
     while (var) {
         if (strcmp(var->name, name) == 0) {
-            return var->value
+            return var->value;
         }
         var = var->next;
     }
@@ -46,10 +47,21 @@ void env_debug_print(Enviroment *env) {
     return;
 }
 
-void interpret(ASTNode *node, Enviroment *env) {
-    if (!node) return;
+ASTNode *interpret(ASTNode *node, Enviroment *env) {
+    if (!node) return NULL;
 
     switch (node->type) {
-        default: printf("invalid node type");
+        case AST_BLOCK: {
+            printf("AST_BLOCK\n");
+            for (size_t i = 0; i < node->block.count; i++) {
+                interpret(node->block.statements[i], env);
+            }
+        }
+        case AST_VAR_DECL: {
+            printf("AST_VAR_DECL\n");
+            ASTNode *right = interpret(node->binary.right, env);
+            env_set(env, node->binary.left->identifier.name);
+        }
+        default: printf("invalid node type\n");
     }
 }

@@ -1,5 +1,6 @@
 #include "ast.h"
 #include "debug_helper.h"
+#include "interpreter.h"
 #include "lexer.h"
 #include "parser.h"
 #include "token.h"
@@ -93,9 +94,12 @@ int main(int argc, char **argv) {
   parser_init(&parser, tokens, count);
   ASTNode *ast_tree = parse_program(&parser);
   
-  //ast_debug(ast_tree, 0);
+  ast_debug(ast_tree, 0);
 
-  //free(ast_tree);
+  Enviroment *env = new_env();
+  interpret(ast_tree, env);
+
+  free(ast_tree);
   free(tokens);
   free(source);
   return 0;
