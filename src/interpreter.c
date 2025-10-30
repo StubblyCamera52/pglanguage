@@ -47,7 +47,9 @@ void env_debug_print(Enviroment *env) {
     return;
 }
 
-ASTNode *interpret(ASTNode *node, Enviroment *env) {
+
+
+EvalResult *interpret(ASTNode *node, Enviroment *env) {
     if (!node) return NULL;
 
     switch (node->type) {
@@ -57,10 +59,8 @@ ASTNode *interpret(ASTNode *node, Enviroment *env) {
                 interpret(node->block.statements[i], env);
             }
         }
-        case AST_VAR_DECL: {
-            printf("AST_VAR_DECL\n");
-            ASTNode *right = interpret(node->binary.right, env);
-            env_set(env, node->binary.left->identifier.name);
+        case AST_EXPRESSION: {
+            return interpret(node, env);
         }
         default: printf("invalid node type\n");
     }

@@ -6,7 +6,7 @@
 #include <stddef.h>
 
 typedef enum {
-    AST_PROGRAM, AST_VAR_DECL, AST_CONST_DECL, AST_BLOCK, AST_IF, AST_WHILE, AST_FOR, AST_BIN_EXPR, AST_UN_EXPR, AST_ASSIGNMENT, AST_LITERAL, AST_IDENTIFIER
+    AST_PROGRAM, AST_VAR_DECL, AST_CONST_DECL, AST_BLOCK, AST_IF, AST_WHILE, AST_FOR, AST_EXPRESSION, AST_IDENTIFIER
 } ASTNodeType;
 
 typedef struct ASTNode {
@@ -42,9 +42,7 @@ typedef struct ASTNode {
 } ASTNode;
 
 ASTNode *ast_make_identifier(Token name);
-ASTNode *ast_make_binary(ASTNode *left, ASTNode *right, Token op);
 ASTNode *ast_make_block(ASTNode **statements, size_t count);
-ASTNode *ast_make_literal(const char *value, TokenType type);
 
 ASTNode *alloc_node(ASTNodeType type);
 

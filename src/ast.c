@@ -10,14 +10,6 @@ ASTNode *alloc_node(ASTNodeType type) {
     return node;
 }
 
-ASTNode *ast_make_binary(ASTNode *left, ASTNode *right, Token op) {
-    ASTNode *node = alloc_node(AST_BIN_EXPR);
-    node->binary.left = left;
-    node->binary.right = right;
-    node-> binary.op = op;
-    return node;
-}
-
 ASTNode *ast_make_identifier(Token name) {
     ASTNode *node = alloc_node(AST_IDENTIFIER);
     node->identifier.name = strdup(name.start);
@@ -29,12 +21,5 @@ ASTNode *ast_make_block(ASTNode **statements, size_t count) {
     ASTNode *node = alloc_node(AST_BLOCK);
     node->block.statements = statements;
     node->block.count = count;
-    return node;
-}
-
-ASTNode *ast_make_literal(const char *value, TokenType type) {
-    ASTNode *node = alloc_node(AST_LITERAL);
-    node->literal.type = type;
-    node->literal.value = value;
     return node;
 }

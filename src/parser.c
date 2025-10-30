@@ -104,19 +104,6 @@ ASTNode *parse_expression_stmt(Parser *parser) {
     return expr;
 }
 
-ASTNode *parse_assignment(Parser *parser) {
-    ASTNode *expr = parse_primary(parser);
-
-    if (match(parser, TOKEN_EQUAL)) {
-        Token op = *previous(parser);
-        ASTNode *right = parse_assignment(parser);
-        expr = ast_make_binary(expr, right, op);
-    }
-
-    return expr;
-}
-
-
 ASTNode *parse_primary(Parser *parser) {
     if (match(parser, TOKEN_IDENTIFIER)) {
         return ast_make_identifier(*previous(parser));
