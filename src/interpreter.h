@@ -15,6 +15,6 @@ typedef struct {
 void interpret(ASTNode *node, Enviroment *env);
 Enviroment *new_env();
 void env_set(Enviroment *env, const char* name, int value);
-int env_get(Enviroment *env, int value);
+int env_get(Enviroment *env, const char* name);
 
 #endif
