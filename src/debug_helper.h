@@ -3,6 +3,6 @@
 
 #include "ast.h"
 
-void debug_print_ast_tree(ASTNode *root, int indent);
+void ast_debug(ASTNode *node, int indent);
 
 #endif

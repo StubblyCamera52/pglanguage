@@ -93,7 +93,7 @@ int main(int argc, char **argv) {
   parser_init(&parser, tokens, count);
   ASTNode *ast_tree = parse_program(&parser);
   
-  debug_print_ast_tree(ast_tree, 0);
+  ast_debug(ast_tree, 0);
 
   //free(ast_tree);
   free(tokens);

@@ -3,26 +3,44 @@
 #include <stddef.h>
 #include <stdio.h>
 
-void debug_print_ast_tree(ASTNode *node, int indent) {
-    if (node == NULL) {
-        return;
+const char* ast_node_type_to_name(ASTNodeType type) {
+    switch (type) {
+        case AST_BLOCK: return "AST_BLOCK";
+        case AST_ASSIGNMENT: return "AST_ASSIGNMENT";
+        case AST_PROGRAM: return "AST_PROGRAM";
+        case AST_BIN_EXPR: return "AST_BIN_EXPR";
+        case AST_UN_EXPR: return "AST_UN_EXPR";
+        case AST_CONST_DECL: return "AST_CONST_DELC";
+        case AST_VAR_DECL: return "AST_VAR_DECL";
+        case AST_FOR: return "AST_FOR";
+        case AST_IDENTIFIER: return "AST_IDENTIFIER";
+        case AST_IF: return "AST_IF";
+        case AST_LITERAL: return "AST_LITERAL";
+        case AST_WHILE: return "AST_WHILE";
     }
+}
 
-    for (int i = 0; i < indent; i++) {
-        printf("  ");
-    }
-
-    printf("|-- %s\n", node->token.start);
-
+void ast_debug(ASTNode *node, int indent) {
+    if (!node) return;
+    
+    printf("%s\n", ast_node_type_to_name(node->type));
+    
     switch (node->type) {
+        case AST_BIN_EXPR: {
+            ast_debug(node->binary.left,0);
+            ast_debug(node->binary.right, 0);
+            break;
+        }
+        case AST_UN_EXPR: {
+            ast_debug(node->unary.expr, 0);
+            break;
+        }
         case AST_BLOCK: {
             for (size_t i = 0; i < node->block.count; i++) {
-                debug_print_ast_tree(node->block.statements[i], indent+1);
+                ast_debug(node->block.statements[i], 0);
             }
+            break;
         }
-        case AST_BIN_EXPR: {
-            debug_print_ast_tree(node->binary.left, indent+1);
-            debug_print_ast_tree(node->binary.right, indent+1);
-        }
+        default: break;
     }
 }
