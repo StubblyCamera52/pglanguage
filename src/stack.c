@@ -11,19 +11,29 @@ bool stack_empty(Stack *stack) {
   return false;
 }
 
-void push(Stack *stack, int value) { stack->array[++stack->top] = value; }
+void push(Stack *stack, StackItem value) { stack->array[++stack->top] = value; }
 
-int pop(Stack *stack) {
-  int item = stack->array[stack->top--];
+StackItem pop(Stack *stack) {
+  StackItem item = stack->array[stack->top--];
   return item;
 }
 
-int peek(Stack *stack) { return stack->array[stack->top]; }
+StackItem peek(Stack *stack) { return stack->array[stack->top]; }
 
 void print_stack(Stack *stack) {
   printf("STACK:\n");
   for (int i = stack->top; i >= 0; i--) {
-    int item = pop(stack);
-    printf("%d\n", item);
+    StackItem item = pop(stack);
+
+    switch (item.type) {
+    case LITERAL: {
+      printf("%d\n", item.literal.value);
+      break;
+    }
+    case IDENT: {
+      printf("%s\n", item.ident.name);
+      break;
+    }
+    }
   }
 }

@@ -73,7 +73,10 @@ void interpret(Token *tokens, Enviroment *env, int num_tokens) {
     case TOKEN_NUMBER: {
       char *value = (char *)malloc(token.length);
       strncpy(value, token.start, token.length);
-      push(&stack, atoi(value));
+      StackItem item;
+      item.type = LITERAL;
+      item.literal.value = atoi(value);
+      push(&stack, item);
       free(value);
       i++;
       break;
@@ -82,8 +85,21 @@ void interpret(Token *tokens, Enviroment *env, int num_tokens) {
       char *name = (char *)malloc(token.length + 1);
       strncpy(name, token.start, token.length);
       name[token.length] = '\0';
-      int value = env_get(env, name);
-      push(&stack, value);
+
+      StackItem item;
+      item.type = IDENT;
+      item.ident.name = name;
+      push(&stack, item);
+      i++;
+      break;
+    }
+    case TOKEN_EQUAL: {
+        StackItem value = pop(&stack);
+        StackItem var = pop(&stack);
+
+        env_set(env, var.ident.name, value.literal.value);
+        i++;
+        break;
     }
     default:
       i++;

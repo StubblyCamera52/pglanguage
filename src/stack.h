@@ -5,16 +5,30 @@
 
 #include <stdbool.h>
 
+typedef enum { IDENT, LITERAL } StackType;
+
 typedef struct {
-  int array[MAX_STACK_SIZE];
+  StackType type;
+  union {
+    struct {
+        int value;
+    } literal;
+    struct {
+        char* name;
+    } ident;
+  };
+} StackItem;
+
+typedef struct {
+  StackItem array[MAX_STACK_SIZE];
   int top;
 } Stack;
 
 void initialize_stack(Stack *stack);
 bool stack_empty(Stack *stack);
-void push(Stack *stack, int value);
-int pop(Stack *stack);
-int peek(Stack *stack);
+void push(Stack *stack, StackItem value);
+StackItem pop(Stack *stack);
+StackItem peek(Stack *stack);
 void print_stack(Stack *stack);
 
 #endif
