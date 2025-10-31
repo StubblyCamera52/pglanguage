@@ -1,10 +1,9 @@
 #ifndef INTERPRETER_H
 #define INTERPRETER_H
 
-#include "ast.h"
 #include "token.h"
 
-typedef struct {
+typedef struct Var {
     char* name;
     int value;
     struct Var* next;
@@ -14,7 +13,7 @@ typedef struct {
     Var* head;
 } Enviroment;
 
-EvalResult *interpret(ASTNode *node, Enviroment *env);
+void interpret(Token *tokens, Enviroment *env, int num_tokens);
 Enviroment *new_env();
 void env_set(Enviroment *env, const char* name, int value);
 int env_get(Enviroment *env, const char* name);

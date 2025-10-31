@@ -14,10 +14,8 @@ typedef enum {
 
     // single or maybe multi char tokens
     TOKEN_EQUAL,
-    TOKEN_EQUALEQUAL,
 
     // keywords
-    TOKEN_LET,
     TOKEN_VAR,
 
     TOKEN_EOF,

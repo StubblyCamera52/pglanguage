@@ -1,7 +1,5 @@
-#include "ast.h"
 #include "interpreter.h"
 #include "lexer.h"
-#include "parser.h"
 #include "token.h"
 #include <stddef.h>
 #include <stdio.h>
@@ -49,6 +47,12 @@ static const char *token_type_name(TokenType type) {
     return "PLUS";
   case TOKEN_MINUS:
     return "MINUS";
+  case TOKEN_EQUAL:
+    return "EQUAL";
+  case TOKEN_VAR:
+    return "VAR";
+  case TOKEN_SEMICOLON:
+    return "SEMICOLON";
   case TOKEN_EOF:
     return "EOF";
   default:
@@ -66,7 +70,6 @@ int main(int argc, char **argv) {
 
   Lexer lexer;
   init_lexer(&lexer, source);
-  Parser parser;
 
   // token array (has to be dynamic bc idk the size)
   size_t capacity = 16;
@@ -90,15 +93,9 @@ int main(int argc, char **argv) {
       break;
   }
 
-  parser_init(&parser, tokens, count);
-  ASTNode *ast_tree = parse_program(&parser);
-
-  //ast_debug(ast_tree, 0);
-
   Enviroment *env = new_env();
-  interpret(ast_tree, env);
+  interpret(tokens, env, count);
 
-  free(ast_tree);
   free(tokens);
   free(source);
   return 0;
