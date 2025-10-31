@@ -23,3 +23,7 @@ ASTNode *ast_make_block(ASTNode **statements, size_t count) {
     node->block.count = count;
     return node;
 }
+
+ASTNode *ast_make_expression(EvalInput **inputs) {
+    
+}

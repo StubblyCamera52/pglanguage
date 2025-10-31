@@ -17,12 +17,9 @@ void parser_init(Parser *parser, Token *tokens, size_t count);
 ASTNode *parse_program(Parser *parser);
 ASTNode *parse_declaration(Parser *parser);
 ASTNode *parse_var_decl(Parser *parser);
-ASTNode *parse_const_decl(Parser *parser);
-ASTNode *parse_func_decl(Parser *parser);
 ASTNode *parse_statement(Parser *parser);
 ASTNode *parse_expression_stmt(Parser *parser);
 
-// recursive descent
 ASTNode *parse_expression(Parser *parser);
 
 ASTNode *parse_postfix(Parser *parser);

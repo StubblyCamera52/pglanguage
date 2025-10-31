@@ -47,8 +47,6 @@ void env_debug_print(Enviroment *env) {
     return;
 }
 
-
-
 EvalResult *interpret(ASTNode *node, Enviroment *env) {
     if (!node) return NULL;
 
@@ -60,7 +58,7 @@ EvalResult *interpret(ASTNode *node, Enviroment *env) {
             }
         }
         case AST_EXPRESSION: {
-            return interpret(node, env);
+            return NULL;
         }
         default: printf("invalid node type\n");
     }

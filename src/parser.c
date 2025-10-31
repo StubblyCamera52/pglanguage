@@ -68,13 +68,10 @@ ASTNode *parse_declaration(Parser *parser) {
     return parse_statement(parser);
 }
 
+// vars have no initializers
+
 ASTNode *parse_var_decl(Parser *parser) {
     Token name = *advance(parser);
-
-    ASTNode *initializer = NULL; // initializer is optional
-    if (match(parser, TOKEN_EQUAL)) {
-        initializer = parse_expression(parser);
-    }
 
     if (!match(parser, TOKEN_SEMICOLON)) {
         return NULL;
@@ -82,11 +79,7 @@ ASTNode *parse_var_decl(Parser *parser) {
     }
 
     ASTNode *node = alloc_node(AST_VAR_DECL);
-    node->token = name;
-
-    node->binary.left = ast_make_identifier(name);
-    node->binary.right = initializer;
-
+    node->identifier.name = name.start;
     return node;
 }
 
@@ -109,13 +102,9 @@ ASTNode *parse_primary(Parser *parser) {
         return ast_make_identifier(*previous(parser));
     }
     if (match(parser, TOKEN_NUMBER)) {
-        return ast_make_literal(previous(parser)->start, TOKEN_NUMBER);
+        EvalInput **inputs = (EvalInput**)malloc(sizeof(EvalInput)*1);
+        inputs[0]->type = NUMBER;
+        inputs[0]->number.value = atoi(previous(parser)->start);
+        return ast_make_expression(inputs);
     }
-}
-
-
-
-ASTNode *parse_expression(Parser *parser) {
-    // start parse from highest grammar level
-    return parse_assignment(parser);
 }

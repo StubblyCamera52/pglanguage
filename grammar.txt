@@ -1,11 +1,7 @@
 program -> declaration* EOF;
 
-declaration -> varDeclaration | constDeclaration | funcDeclaration | statement;
-
+declaration -> varDeclaration | statement;
 varDeclaration -> "var" IDENTIFIER ("=" expression)? ";";
-constDeclaration -> "const" IDENTIFIER "=" expression ";";
-funcDeclaration -> "func" IDENTIFIER "(" parameters? ")" block;
-parameters -> IDENTIFIER ("," IDENTIFIER)* ;
 
 statement -> exprStmt | ifStmt | whileStmt | forStmt | breakStmt | continueStmt | returnStmt | block;
 exprStmt -> expression ";";
