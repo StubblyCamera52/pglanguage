@@ -6,7 +6,7 @@ SRC = src
 INC = src
 BIN = bin
 
-TARGET = $(BIN)/mylang
+TARGET = $(BIN)/pglanguage
 
 SRCS = $(wildcard $(SRC)/*.c)
 
