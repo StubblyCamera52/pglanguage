@@ -88,6 +88,9 @@ static TokenType identifier_type(Lexer *lexer) {
         case 'v': {
             return check_keyword(lexer, 1, 2, "ar", TOKEN_VAR);
         } // "var"
+        case 'i': {
+            return check_keyword(lexer, 1, 1, "f", TOKEN_IF);
+        }
     }
     return TOKEN_IDENTIFIER;
 }

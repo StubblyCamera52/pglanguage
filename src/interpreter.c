@@ -2,6 +2,7 @@
 #include "stack.h"
 #include "token.h"
 #include <_string.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -126,35 +127,89 @@ void interpret(Token *tokens, Enviroment *env, int num_tokens) {
       break;
     }
     case TOKEN_LEFTBRACE: {
-        int depth = 1;
-        int j = i;
-        while (tokens[j].type != TOKEN_RIGHTBRACE) {
-            j++;
+      int depth = 1;
+      int j = i;
+      while (tokens[j].type != TOKEN_RIGHTBRACE || depth > 1) {
+        j++;
+        // printf("J: %d\n", j);
+        if (tokens[j].type == TOKEN_LEFTBRACE) {
+          depth++;
         }
-        j -= i;
-
-        Token *scoped_tokens = (Token *)malloc(sizeof(Token)*j);
-
-        j = 0;
-
-        while (tokens[i].type != TOKEN_RIGHTBRACE || depth != 1) {
-            i++;
-            if (tokens[i].type == TOKEN_LEFTBRACE) {
-                depth++;
-            }
-            if (tokens[i].type == TOKEN_RIGHTBRACE) {
-                depth--;
-            }
-            scoped_tokens[j] = tokens[i];
-            j++;
+        if (tokens[j].type == TOKEN_RIGHTBRACE) {
+          depth--;
         }
+      }
 
-        StackItem item;
-        item.type = BLOCK;
-        item.block.tokens = scoped_tokens;
+      j -= i;
 
-        push(&stack, item);
+      // printf("J: %d\n", j);
+
+      Token *scoped_tokens = (Token *)malloc(sizeof(Token) * j);
+
+      j = 0;
+
+      depth = 1;
+
+      while (tokens[i].type != TOKEN_RIGHTBRACE || depth > 1) {
+        i++;
+        if (tokens[i].type == TOKEN_LEFTBRACE) {
+          depth++;
+        }
+        if (tokens[i].type == TOKEN_RIGHTBRACE) {
+          depth--;
+        }
+        scoped_tokens[j] = tokens[i];
+        j++;
+      }
+
+      StackItem item;
+      item.type = BLOCK;
+      item.block.tokens = scoped_tokens;
+      item.block.size = j;
+
+      push(&stack, item);
+      break;
+    }
+    case TOKEN_IF: {
+      StackItem condition = pop(&stack);
+      StackItem block = pop(&stack);
+
+      if (block.type != BLOCK) {
         break;
+      }
+
+      if (condition.literal.value == 1) {
+        interpret(block.block.tokens, env, block.block.size);
+      }
+
+      i++;
+      break;
+    }
+    case TOKEN_LESS: {
+      StackItem n2 = pop(&stack);
+      StackItem n1 = pop(&stack);
+      int v1 = 0;
+      int v2 = 0;
+
+      if (n1.type == IDENT) {
+        v1 = env_get(env, n1.ident.name);
+      } else {
+        v1 = n1.literal.value;
+      }
+
+      if (n2.type == IDENT) {
+        v2 = env_get(env, n2.ident.name);
+      } else {
+        v2 = n2.literal.value;
+      }
+
+      int result = (v1 < v2);
+
+      // printf("%d: %d < %d\n", result, v1, v2);
+
+      push(&stack, st_from_int(result));
+      i++;
+      break;
     }
     default:
       i++;

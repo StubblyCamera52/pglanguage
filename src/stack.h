@@ -19,6 +19,7 @@ typedef struct {
     } ident;
     struct {
         Token* tokens;
+        int size;
     } block;
   };
 } StackItem;

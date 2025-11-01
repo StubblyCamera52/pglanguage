@@ -55,6 +55,8 @@ static const char *token_type_name(TokenType type) {
     return "SEMICOLON";
   case TOKEN_EOF:
     return "EOF";
+  case TOKEN_IF:
+    return "IF";
   default:
     return "OTHER";
   }
