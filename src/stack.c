@@ -35,7 +35,7 @@ void print_stack(Stack *stack) {
       break;
     }
     default: {
-        printf("block");
+        printf("block\n");
         break;
     }
     }

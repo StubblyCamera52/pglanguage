@@ -125,6 +125,30 @@ void interpret(Token *tokens, Enviroment *env, int num_tokens) {
       i++;
       break;
     }
+    case TOKEN_LEFTBRACE: {
+        int j = i;
+        while (tokens[j].type != TOKEN_RIGHTBRACE) {
+            j++;
+        }
+        j -= i;
+
+        Token *scoped_tokens = (Token *)malloc(sizeof(Token)*j);
+
+        j = 0;
+
+        while (tokens[i].type != TOKEN_RIGHTBRACE) {
+            i++;
+            scoped_tokens[j] = tokens[i];
+            j++;
+        }
+
+        StackItem item;
+        item.type = BLOCK;
+        item.block.tokens = scoped_tokens;
+
+        push(&stack, item);
+        break;
+    }
     default:
       i++;
     };
