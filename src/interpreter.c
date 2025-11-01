@@ -126,6 +126,7 @@ void interpret(Token *tokens, Enviroment *env, int num_tokens) {
       break;
     }
     case TOKEN_LEFTBRACE: {
+        int depth = 1;
         int j = i;
         while (tokens[j].type != TOKEN_RIGHTBRACE) {
             j++;
@@ -136,8 +137,14 @@ void interpret(Token *tokens, Enviroment *env, int num_tokens) {
 
         j = 0;
 
-        while (tokens[i].type != TOKEN_RIGHTBRACE) {
+        while (tokens[i].type != TOKEN_RIGHTBRACE || depth != 1) {
             i++;
+            if (tokens[i].type == TOKEN_LEFTBRACE) {
+                depth++;
+            }
+            if (tokens[i].type == TOKEN_RIGHTBRACE) {
+                depth--;
+            }
             scoped_tokens[j] = tokens[i];
             j++;
         }
