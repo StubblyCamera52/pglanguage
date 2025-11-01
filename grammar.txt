@@ -2,4 +2,5 @@ program ::= statement*
 statement ::= var_decl | expr ";"
 var_decl ::= "var" IDENT ";"
 expr ::= token+
-token ::= IDENT | NUMBER | OPERATOR
+token ::= IDENT | NUMBER | OPERATOR | control
+control ::= "{" | "}" | "if;" | "while;"

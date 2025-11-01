@@ -1,11 +1,12 @@
 #ifndef STACK_H
 #define STACK_H
 
+#include "token.h"
 #define MAX_STACK_SIZE 100
 
 #include <stdbool.h>
 
-typedef enum { IDENT, LITERAL } StackType;
+typedef enum { IDENT, LITERAL, BLOCK } StackType;
 
 typedef struct {
   StackType type;
@@ -16,6 +17,9 @@ typedef struct {
     struct {
         char* name;
     } ident;
+    struct {
+        Token* tokens;
+    } block;
   };
 } StackItem;
 
@@ -30,5 +34,7 @@ void push(Stack *stack, StackItem value);
 StackItem pop(Stack *stack);
 StackItem peek(Stack *stack);
 void print_stack(Stack *stack);
+StackItem st_from_int(int value);
+
 
 #endif

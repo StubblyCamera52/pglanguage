@@ -141,6 +141,11 @@ Token next_token(Lexer *lexer) {
     switch (c) {
         case '=': return make_token(lexer, TOKEN_EQUAL);
         case ';': return make_token(lexer, TOKEN_SEMICOLON);
+        case '+': return make_token(lexer, TOKEN_PLUS);
+        case '-': return make_token(lexer, TOKEN_MINUS);
+        case '<': return make_token(lexer, TOKEN_LESS);
+        case '{': return make_token(lexer, TOKEN_LEFTBRACE);
+        case '}': return make_token(lexer, TOKEN_RIGHTBRACE);
     }
 
     return error_token("unexpected character");

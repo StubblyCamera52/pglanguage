@@ -94,12 +94,36 @@ void interpret(Token *tokens, Enviroment *env, int num_tokens) {
       break;
     }
     case TOKEN_EQUAL: {
-        StackItem value = pop(&stack);
-        StackItem var = pop(&stack);
+      StackItem value = pop(&stack);
+      StackItem var = pop(&stack);
 
-        env_set(env, var.ident.name, value.literal.value);
-        i++;
-        break;
+      env_set(env, var.ident.name, value.literal.value);
+      i++;
+      break;
+    }
+    case TOKEN_PLUS: {
+      StackItem n1 = pop(&stack);
+      StackItem n2 = pop(&stack);
+      int v1 = 0;
+      int v2 = 0;
+
+      if (n1.type == IDENT) {
+        v1 = env_get(env, n1.ident.name);
+      } else {
+        v1 = n1.literal.value;
+      }
+
+      if (n2.type == IDENT) {
+        v2 = env_get(env, n2.ident.name);
+      } else {
+        v2 = n2.literal.value;
+      }
+
+      int result = v1 + v2;
+
+      push(&stack, st_from_int(result));
+      i++;
+      break;
     }
     default:
       i++;

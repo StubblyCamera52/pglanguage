@@ -34,6 +34,18 @@ void print_stack(Stack *stack) {
       printf("%s\n", item.ident.name);
       break;
     }
+    default: {
+        printf("block");
+        break;
+    }
     }
   }
+}
+
+StackItem st_from_int(int value) {
+    StackItem item;
+    item.type = LITERAL;
+    item.literal.value = value;
+
+    return item;
 }
