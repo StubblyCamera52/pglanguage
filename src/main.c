@@ -47,6 +47,22 @@ static const char *token_type_name(TokenType type) {
     return "PLUS";
   case TOKEN_MINUS:
     return "MINUS";
+  case TOKEN_DIVIDE:
+    return "DIVIDE";
+  case TOKEN_MULTIPLY:
+    return "MULTIPLY";
+  case TOKEN_GREATER:
+    return "GREATER";
+  case TOKEN_LESS:
+    return "LESS";
+  case TOKEN_LEFTBRACE:
+    return "LEFT BRACE";
+  case TOKEN_RIGHTBRACE:
+    return "RIGHT BRACE";
+  case TOKEN_EQUALEQUAL:
+    return "EQUAL EQUAL";
+  case TOKEN_WHILE:
+    return "WHILE";
   case TOKEN_EQUAL:
     return "EQUAL";
   case TOKEN_VAR:

@@ -91,6 +91,12 @@ static TokenType identifier_type(Lexer *lexer) {
         case 'i': {
             return check_keyword(lexer, 1, 1, "f", TOKEN_IF);
         }
+        case 'w': {
+          return check_keyword(lexer, 1, 4, "hile", TOKEN_WHILE);
+        }
+        case 'p': {
+          return check_keyword(lexer, 1, 7, "rintenv", TOKEN_PRINTENV);
+        }
     }
     return TOKEN_IDENTIFIER;
 }
@@ -142,11 +148,18 @@ Token next_token(Lexer *lexer) {
     if (isdigit(c)) return number(lexer);
 
     switch (c) {
-        case '=': return make_token(lexer, TOKEN_EQUAL);
+        case '=': {
+          if (peek(lexer) == '=') {
+            return make_token(lexer, TOKEN_EQUALEQUAL);
+          } else return make_token(lexer, TOKEN_EQUAL);
+        };
         case ';': return make_token(lexer, TOKEN_SEMICOLON);
         case '+': return make_token(lexer, TOKEN_PLUS);
         case '-': return make_token(lexer, TOKEN_MINUS);
+        case '*': return make_token(lexer, TOKEN_MULTIPLY);
+        case '/': return make_token(lexer, TOKEN_DIVIDE);
         case '<': return make_token(lexer, TOKEN_LESS);
+        case '>': return make_token(lexer, TOKEN_GREATER);
         case '{': return make_token(lexer, TOKEN_LEFTBRACE);
         case '}': return make_token(lexer, TOKEN_RIGHTBRACE);
     }

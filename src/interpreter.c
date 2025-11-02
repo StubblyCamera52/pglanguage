@@ -126,6 +126,78 @@ void interpret(Token *tokens, Enviroment *env, int num_tokens) {
       i++;
       break;
     }
+    case TOKEN_MINUS: {
+      StackItem n1 = pop(&stack);
+      StackItem n2 = pop(&stack);
+      int v1 = 0;
+      int v2 = 0;
+
+      if (n1.type == IDENT) {
+        v1 = env_get(env, n1.ident.name);
+      } else {
+        v1 = n1.literal.value;
+      }
+
+      if (n2.type == IDENT) {
+        v2 = env_get(env, n2.ident.name);
+      } else {
+        v2 = n2.literal.value;
+      }
+
+      int result = v1 - v2;
+
+      push(&stack, st_from_int(result));
+      i++;
+      break;
+    }
+    case TOKEN_DIVIDE: {
+      StackItem n1 = pop(&stack);
+      StackItem n2 = pop(&stack);
+      int v1 = 0;
+      int v2 = 0;
+
+      if (n1.type == IDENT) {
+        v1 = env_get(env, n1.ident.name);
+      } else {
+        v1 = n1.literal.value;
+      }
+
+      if (n2.type == IDENT) {
+        v2 = env_get(env, n2.ident.name);
+      } else {
+        v2 = n2.literal.value;
+      }
+
+      int result = v1 / v2;
+
+      push(&stack, st_from_int(result));
+      i++;
+      break;
+    }
+    case TOKEN_MULTIPLY: {
+      StackItem n1 = pop(&stack);
+      StackItem n2 = pop(&stack);
+      int v1 = 0;
+      int v2 = 0;
+
+      if (n1.type == IDENT) {
+        v1 = env_get(env, n1.ident.name);
+      } else {
+        v1 = n1.literal.value;
+      }
+
+      if (n2.type == IDENT) {
+        v2 = env_get(env, n2.ident.name);
+      } else {
+        v2 = n2.literal.value;
+      }
+
+      int result = v1 * v2;
+
+      push(&stack, st_from_int(result));
+      i++;
+      break;
+    }
     case TOKEN_LEFTBRACE: {
       int depth = 1;
       int j = i;
@@ -186,8 +258,8 @@ void interpret(Token *tokens, Enviroment *env, int num_tokens) {
       break;
     }
     case TOKEN_LESS: {
-      StackItem n2 = pop(&stack);
       StackItem n1 = pop(&stack);
+      StackItem n2 = pop(&stack);
       int v1 = 0;
       int v2 = 0;
 
@@ -211,12 +283,62 @@ void interpret(Token *tokens, Enviroment *env, int num_tokens) {
       i++;
       break;
     }
+    case TOKEN_GREATER: {
+      StackItem n1 = pop(&stack);
+      StackItem n2 = pop(&stack);
+      int v1 = 0;
+      int v2 = 0;
+
+      if (n1.type == IDENT) {
+        v1 = env_get(env, n1.ident.name);
+      } else {
+        v1 = n1.literal.value;
+      }
+
+      if (n2.type == IDENT) {
+        v2 = env_get(env, n2.ident.name);
+      } else {
+        v2 = n2.literal.value;
+      }
+
+      int result = (v1 > v2);
+
+      // printf("%d: %d < %d\n", result, v1, v2);
+
+      push(&stack, st_from_int(result));
+      i++;
+      break;
+    }
+    case TOKEN_EQUALEQUAL: {
+      StackItem n1 = pop(&stack);
+      StackItem n2 = pop(&stack);
+      int v1 = 0;
+      int v2 = 0;
+
+      if (n1.type == IDENT) {
+        v1 = env_get(env, n1.ident.name);
+      } else {
+        v1 = n1.literal.value;
+      }
+
+      if (n2.type == IDENT) {
+        v2 = env_get(env, n2.ident.name);
+      } else {
+        v2 = n2.literal.value;
+      }
+
+      int result = (v1 == v2);
+
+      // printf("%d: %d < %d\n", result, v1, v2);
+
+      push(&stack, st_from_int(result));
+      i++;
+      break;
+    }
     default:
       i++;
     };
   }
 end_loop:
-
-  env_debug_print(env);
-  print_stack(&stack);
+  (void)0; // prevents compiler warnign
 }
