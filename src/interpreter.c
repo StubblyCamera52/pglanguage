@@ -6,6 +6,18 @@
 #include <stdlib.h>
 #include <string.h>
 
+// why is this causing problems
+char *strdup(const char *s) {
+    if (s == NULL)
+        return NULL;
+
+    size_t len = strlen(s) + 1; // +1 for the null terminator
+    char *copy = malloc(len);
+    if (copy)
+        memcpy(copy, s, len);
+    return copy;
+}
+
 Enviroment *new_env() {
   Enviroment *env = (Enviroment *)malloc(sizeof(Enviroment));
   env->head = NULL;
@@ -69,8 +81,9 @@ void interpret(Token *tokens, Enviroment *env, Stack *stack, int num_tokens) {
       break;
     }
     case TOKEN_NUMBER: {
-      char *value = (char *)malloc(token.length);
+      char *value = (char *)malloc(token.length+1);
       strncpy(value, token.start, token.length);
+      value[token.length] = '\0';
       StackItem item;
       item.type = LITERAL;
       item.literal.value = atoi(value);
@@ -216,7 +229,7 @@ void interpret(Token *tokens, Enviroment *env, Stack *stack, int num_tokens) {
         }
       }
 
-      j -= i+1;
+      j -= i;
 
       Token *scoped_tokens = (Token *)malloc(sizeof(Token) * j);
 
@@ -373,6 +386,7 @@ void interpret(Token *tokens, Enviroment *env, Stack *stack, int num_tokens) {
         name[idtoken.length] = '\0';
 
         printf("%s: %d\n", name, env_get(env, name));
+        free(name);
         i++;
       } else {
         env_debug_print(env);
