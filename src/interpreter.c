@@ -1,7 +1,6 @@
 #include "interpreter.h"
 #include "stack.h"
 #include "token.h"
-#include <_string.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
