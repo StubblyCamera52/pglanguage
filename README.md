@@ -3,6 +3,7 @@
 a programming language based on a stack. Made for siege week 9
 note to reviewer: this does not follow the theme for this week (spooky)
 
+<img width="1335" height="985" alt="Screenshot 2025-11-02 at 9 03 18 PM" src="https://github.com/user-attachments/assets/3ba1ccf9-b7a0-4723-b03e-83bc575d6f00" />
 
 ### technical details
 
@@ -88,14 +89,16 @@ end;
 ```
 
 
-example output running the above program (note
+example output running the above program
 ```
 make run ARGS="sampleprograms/fibbonaci.sp 12"
 ./bin/pglanguage sampleprograms/fibbonaci.sp 12
-
-
 
  program output:
 
 result: 89
 ```
+
+## Running
+- build using `make`
+- run using `make run ARGS="path-to-program program-arg"` (eg `make run ARGS="sampleprograms/factorial.sp 5"`)
