@@ -96,7 +96,15 @@ void interpret(Token *tokens, Enviroment *env, Stack *stack, int num_tokens) {
       StackItem value = pop(stack);
       StackItem var = pop(stack);
 
-      env_set(env, var.ident.name, value.literal.value);
+      int realvalue;
+
+      if (value.type == IDENT) {
+        realvalue = env_get(env, value.ident.name);
+      } else {
+        realvalue = value.literal.value;
+      }
+
+      env_set(env, var.ident.name, realvalue);
       i++;
       break;
     }
@@ -359,9 +367,22 @@ void interpret(Token *tokens, Enviroment *env, Stack *stack, int num_tokens) {
       break;
     }
     case TOKEN_PRINTENV: {
-      env_debug_print(env);
+      if (tokens[i+1].type == TOKEN_IDENTIFIER) {
+        Token idtoken = tokens[i+1];
+        char *name = (char *)malloc(idtoken.length + 1);
+        strncpy(name, idtoken.start, idtoken.length);
+        name[idtoken.length] = '\0';
+
+        printf("%s: %d\n", name, env_get(env, name));
+        i++;
+      } else {
+        env_debug_print(env);
+      }
       i++;
       break;
+    }
+    case TOKEN_END: {
+      exit(0);
     }
     default:
       i++;

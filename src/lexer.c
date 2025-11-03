@@ -97,6 +97,9 @@ static TokenType identifier_type(Lexer *lexer) {
         case 'p': {
           return check_keyword(lexer, 1, 7, "rintenv", TOKEN_PRINTENV);
         }
+        case 'e': {
+          return check_keyword(lexer, 1, 2, "nd", TOKEN_END);
+        }
     }
     return TOKEN_IDENTIFIER;
 }
@@ -149,7 +152,7 @@ Token next_token(Lexer *lexer) {
 
     switch (c) {
         case '=': {
-          if (peek(lexer) == '=') {
+          if (match(lexer, '=')) {
             return make_token(lexer, TOKEN_EQUALEQUAL);
           } else return make_token(lexer, TOKEN_EQUAL);
         };

@@ -32,6 +32,7 @@ typedef enum {
 
     // comands
     TOKEN_PRINTENV,
+    TOKEN_END,
 } TokenType;
 
 typedef struct {

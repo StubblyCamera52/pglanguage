@@ -112,6 +112,12 @@ int main(int argc, char **argv) {
   }
 
   Enviroment *env = new_env();
+
+  if (argc > 2) {
+    int program_arg_value = atoi(argv[2]);
+    env_set(env, "arg", program_arg_value);
+  }
+
   Stack stack;
   initialize_stack(&stack);
   interpret(tokens, env, &stack, count);
