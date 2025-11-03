@@ -43,20 +43,18 @@ int env_get(Enviroment *env, const char *name) {
 
 void env_debug_print(Enviroment *env) {
   Var *var = env->head;
+  printf("\nENVIROMENT:\n");
   while (var) {
-    printf("ENVIROMENT:\n");
     printf("%s: %d\n", var->name, var->value);
     var = var->next;
   }
   return;
 }
 
-void interpret(Token *tokens, Enviroment *env, int num_tokens) {
-  Stack stack;
-  initialize_stack(&stack);
-
+void interpret(Token *tokens, Enviroment *env, Stack *stack, int num_tokens) {
   for (int i = 0; i < num_tokens;) {
     Token token = tokens[i];
+    //printf("%d ", stack.top);
 
     switch (token.type) {
     case TOKEN_EOF:
@@ -77,7 +75,7 @@ void interpret(Token *tokens, Enviroment *env, int num_tokens) {
       StackItem item;
       item.type = LITERAL;
       item.literal.value = atoi(value);
-      push(&stack, item);
+      push(stack, item);
       free(value);
       i++;
       break;
@@ -90,21 +88,21 @@ void interpret(Token *tokens, Enviroment *env, int num_tokens) {
       StackItem item;
       item.type = IDENT;
       item.ident.name = name;
-      push(&stack, item);
+      push(stack, item);
       i++;
       break;
     }
     case TOKEN_EQUAL: {
-      StackItem value = pop(&stack);
-      StackItem var = pop(&stack);
+      StackItem value = pop(stack);
+      StackItem var = pop(stack);
 
       env_set(env, var.ident.name, value.literal.value);
       i++;
       break;
     }
     case TOKEN_PLUS: {
-      StackItem n1 = pop(&stack);
-      StackItem n2 = pop(&stack);
+      StackItem n1 = pop(stack);
+      StackItem n2 = pop(stack);
       int v1 = 0;
       int v2 = 0;
 
@@ -122,13 +120,13 @@ void interpret(Token *tokens, Enviroment *env, int num_tokens) {
 
       int result = v1 + v2;
 
-      push(&stack, st_from_int(result));
+      push(stack, st_from_int(result));
       i++;
       break;
     }
     case TOKEN_MINUS: {
-      StackItem n1 = pop(&stack);
-      StackItem n2 = pop(&stack);
+      StackItem n1 = pop(stack);
+      StackItem n2 = pop(stack);
       int v1 = 0;
       int v2 = 0;
 
@@ -146,13 +144,13 @@ void interpret(Token *tokens, Enviroment *env, int num_tokens) {
 
       int result = v1 - v2;
 
-      push(&stack, st_from_int(result));
+      push(stack, st_from_int(result));
       i++;
       break;
     }
     case TOKEN_DIVIDE: {
-      StackItem n1 = pop(&stack);
-      StackItem n2 = pop(&stack);
+      StackItem n1 = pop(stack);
+      StackItem n2 = pop(stack);
       int v1 = 0;
       int v2 = 0;
 
@@ -170,13 +168,13 @@ void interpret(Token *tokens, Enviroment *env, int num_tokens) {
 
       int result = v1 / v2;
 
-      push(&stack, st_from_int(result));
+      push(stack, st_from_int(result));
       i++;
       break;
     }
     case TOKEN_MULTIPLY: {
-      StackItem n1 = pop(&stack);
-      StackItem n2 = pop(&stack);
+      StackItem n1 = pop(stack);
+      StackItem n2 = pop(stack);
       int v1 = 0;
       int v2 = 0;
 
@@ -194,7 +192,7 @@ void interpret(Token *tokens, Enviroment *env, int num_tokens) {
 
       int result = v1 * v2;
 
-      push(&stack, st_from_int(result));
+      push(stack, st_from_int(result));
       i++;
       break;
     }
@@ -203,7 +201,6 @@ void interpret(Token *tokens, Enviroment *env, int num_tokens) {
       int j = i;
       while (tokens[j].type != TOKEN_RIGHTBRACE || depth > 1) {
         j++;
-        // printf("J: %d\n", j);
         if (tokens[j].type == TOKEN_LEFTBRACE) {
           depth++;
         }
@@ -212,9 +209,7 @@ void interpret(Token *tokens, Enviroment *env, int num_tokens) {
         }
       }
 
-      j -= i;
-
-      // printf("J: %d\n", j);
+      j -= i+1;
 
       Token *scoped_tokens = (Token *)malloc(sizeof(Token) * j);
 
@@ -239,27 +234,55 @@ void interpret(Token *tokens, Enviroment *env, int num_tokens) {
       item.block.tokens = scoped_tokens;
       item.block.size = j;
 
-      push(&stack, item);
+      push(stack, item);
       break;
     }
     case TOKEN_IF: {
-      StackItem condition = pop(&stack);
-      StackItem block = pop(&stack);
+      StackItem condition = pop(stack);
+      StackItem block = pop(stack);
 
       if (block.type != BLOCK) {
+        i++;
         break;
       }
 
       if (condition.literal.value == 1) {
-        interpret(block.block.tokens, env, block.block.size);
+        interpret(block.block.tokens, env, stack, block.block.size);
       }
 
       i++;
       break;
     }
+    case TOKEN_WHILE: {
+      StackItem condition = pop(stack);
+      StackItem block = pop(stack);
+
+      if (block.type != BLOCK) {
+        i++;
+        printf("not a block");
+        break;
+      }
+
+      if (condition.type != BLOCK) {
+        i++;
+        printf("not a block");
+        break;
+      }
+
+      while (true) {
+        interpret(condition.block.tokens, env, stack, condition.block.size);
+        if (pop(stack).literal.value == 1) {
+          interpret(block.block.tokens, env, stack, block.block.size);
+        } else {
+          break;
+        }
+      }
+      i++;
+      break;
+    }
     case TOKEN_LESS: {
-      StackItem n1 = pop(&stack);
-      StackItem n2 = pop(&stack);
+      StackItem n1 = pop(stack);
+      StackItem n2 = pop(stack);
       int v1 = 0;
       int v2 = 0;
 
@@ -277,15 +300,15 @@ void interpret(Token *tokens, Enviroment *env, int num_tokens) {
 
       int result = (v1 < v2);
 
-      // printf("%d: %d < %d\n", result, v1, v2);
+      //printf("%d: %d < %d\n", result, v1, v2);
 
-      push(&stack, st_from_int(result));
+      push(stack, st_from_int(result));
       i++;
       break;
     }
     case TOKEN_GREATER: {
-      StackItem n1 = pop(&stack);
-      StackItem n2 = pop(&stack);
+      StackItem n1 = pop(stack);
+      StackItem n2 = pop(stack);
       int v1 = 0;
       int v2 = 0;
 
@@ -305,13 +328,13 @@ void interpret(Token *tokens, Enviroment *env, int num_tokens) {
 
       // printf("%d: %d < %d\n", result, v1, v2);
 
-      push(&stack, st_from_int(result));
+      push(stack, st_from_int(result));
       i++;
       break;
     }
     case TOKEN_EQUALEQUAL: {
-      StackItem n1 = pop(&stack);
-      StackItem n2 = pop(&stack);
+      StackItem n1 = pop(stack);
+      StackItem n2 = pop(stack);
       int v1 = 0;
       int v2 = 0;
 
@@ -331,7 +354,12 @@ void interpret(Token *tokens, Enviroment *env, int num_tokens) {
 
       // printf("%d: %d < %d\n", result, v1, v2);
 
-      push(&stack, st_from_int(result));
+      push(stack, st_from_int(result));
+      i++;
+      break;
+    }
+    case TOKEN_PRINTENV: {
+      env_debug_print(env);
       i++;
       break;
     }
@@ -340,5 +368,5 @@ void interpret(Token *tokens, Enviroment *env, int num_tokens) {
     };
   }
 end_loop:
-  (void)0; // prevents compiler warnign
+  ;; // prevents compiler warnign
 }

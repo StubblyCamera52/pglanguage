@@ -1,10 +1,11 @@
 var x;
-x 42 =;
+x 0 =;
 
-{ x 2 =; }
-43 x <;
-if;
-
-x 2 x / =;
+{
+x 1 x + =;
+printenv;
+}
+{ 4 x <; }
+while;
 
 printenv;

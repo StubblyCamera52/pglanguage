@@ -112,9 +112,12 @@ int main(int argc, char **argv) {
   }
 
   Enviroment *env = new_env();
-  interpret(tokens, env, count);
+  Stack stack;
+  initialize_stack(&stack);
+  interpret(tokens, env, &stack, count);
 
   free(tokens);
+  free(env);
   free(source);
   return 0;
 }

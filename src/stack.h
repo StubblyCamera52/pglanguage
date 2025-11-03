@@ -2,7 +2,7 @@
 #define STACK_H
 
 #include "token.h"
-#define MAX_STACK_SIZE 100
+#define MAX_STACK_SIZE 10
 
 #include <stdbool.h>
 
