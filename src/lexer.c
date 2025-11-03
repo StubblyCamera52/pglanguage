@@ -165,6 +165,7 @@ Token next_token(Lexer *lexer) {
         case '>': return make_token(lexer, TOKEN_GREATER);
         case '{': return make_token(lexer, TOKEN_LEFTBRACE);
         case '}': return make_token(lexer, TOKEN_RIGHTBRACE);
+        case '"': return string(lexer);
     }
 
     return error_token("unexpected character");

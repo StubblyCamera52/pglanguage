@@ -105,11 +105,13 @@ int main(int argc, char **argv) {
 
     tokens[count++] = token;
 
-    printf("%d: %.*s (%s)\n", token.line, token.length, token.start,
-           token_type_name(token.type));
+    // printf("%d: %.*s (%s)\n", token.line, token.length, token.start,
+    //        token_type_name(token.type));
     if (token.type == TOKEN_EOF)
       break;
   }
+
+  printf("\n\n\n program output:\n\n");
 
   Enviroment *env = new_env();
 
