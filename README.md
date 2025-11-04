@@ -3,8 +3,9 @@
 a programming language based on a stack. Made for siege week 9
 note to reviewer: this does not follow the theme for this week (spooky)
 
-<img width="1335" height="985" alt="Screenshot 2025-11-02 at 9 03 18 PM" src="https://github.com/user-attachments/assets/3ba1ccf9-b7a0-4723-b03e-83bc575d6f00" />
-
+<img width="1335" height="985" alt="Screenshot 2025-11-02 at 9 03 18 PM" src="https://github.com/user-attachments/assets/3ba1ccf9-b7a0-4723-b03e-83bc575d6f00" />  
+https://youtu.be/BKDp2zaJozo
+  
 ### technical details
 
 - doesnt support anything but integers.
